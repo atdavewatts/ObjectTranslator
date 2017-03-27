@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.inject.Singleton;
-
 /**
  * This is THE class to translate objects to strings and strings to objects.  Overriding this, you can also add types 
  * to translate as well like jodatime dates or java.util.Dates etc.  This translator applies to EVERYTHING in the
@@ -15,13 +13,13 @@ import javax.inject.Singleton;
  * @author dhiller
  *
  */
-@Singleton
+
 public class ObjectTranslator {
 
-	private Map<Class<?>, Function<String, Object>> classToUnmarshaller = new HashMap<>();
-	private Map<Class<?>, Function<Object, String>> classToMarshaller = new HashMap<>();
+	private static Map<Class<?>, Function<String, Object>> classToUnmarshaller = new HashMap<>();
+	private static Map<Class<?>, Function<Object, String>> classToMarshaller = new HashMap<>();
 	
-	public ObjectTranslator() {
+	static {
 		classToUnmarshaller.put(Boolean.class, s -> s == null ? null : Boolean.parseBoolean(s));
 		classToUnmarshaller.put(Boolean.TYPE, s -> Boolean.parseBoolean(s));
 		classToUnmarshaller.put(Byte.class, s -> s == null ? null : Byte.parseByte(s));
@@ -55,11 +53,11 @@ public class ObjectTranslator {
 		classToMarshaller.put(String.class, s -> s == null ? null : s.toString());
 	}
 
-	public Function<String, Object> getUnmarshaller(Class<?> paramTypeToCreate) {
+	public static Function<String, Object> getUnmarshaller(Class<?> paramTypeToCreate) {
 		return classToUnmarshaller.get(paramTypeToCreate);
 	}
 
-	public Function<Object, String> getMarshaller(Class<?> type) {
+	public static Function<Object, String> getMarshaller(Class<?> type) {
 		return classToMarshaller.get(type);
 	}
 }
