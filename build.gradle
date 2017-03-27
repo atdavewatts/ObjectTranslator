@@ -339,6 +339,3 @@ task printTasks << {
 
 task release()
 
-task clean() << {
-   delete "${buildDir}"
-}
