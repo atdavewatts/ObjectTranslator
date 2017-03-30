@@ -2,8 +2,8 @@ language: java
 jdk:
 - oraclejdk8
 deploy:
-  upload-dir: output
   provider: s3
+  upload-dir: output
   bucket: "thistimelastyear"
   access_key_id: "AKIAJY5JRDOYDOJJ3TDQ"
   secret_access_key:
