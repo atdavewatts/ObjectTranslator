@@ -5,7 +5,7 @@
 
     "package": {
         "name": "ObjectTranslator", // Bintray package name
-        "repo": "maven", // Bintray repository name
+        "repo": "atdavewatts", // Bintray repository name
         "subject": "atdavewatts", // Bintray subject (user or organization)
         "desc": "I was pushed completely automatically",
         "website_url": "http://github.com/atdavewatts/ObjectTranslator",
