@@ -28,6 +28,15 @@ apply plugin: 'idea'
 apply plugin: 'signing'
 apply plugin: 'maven'
 
+group = 'com.github.atdavewatts'
+   if(project.hasProperty('projVersion')) {
+     project.version = '1.9.'+project.projVersion
+     println("CREATING RELEASE VERSION "+project.version)
+   } else {
+     project.version = '1.9-developer'
+     println("CREATING DEVELOPER VERSION "+version)
+   }
+
 ext {
     // Project constants
 
@@ -84,6 +93,31 @@ allprojects {
    }
 }
 
+  apply plugin: 'maven-publish'
+ 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            pom.withXml {
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each() {
+                    it.scope*.value = 'compile'
+                }
+            }
+        }
+    }
+}
+ 
+model {
+    tasks.generatePomFileForMavenPublication {
+        destination = file("$buildDir/libs/bintray-demo-1.0.0.pom")
+    }
+}
+
 subprojects {
    apply plugin: 'java'
    //apply plugin: 'checkstyle'
@@ -92,14 +126,9 @@ subprojects {
    apply plugin: 'signing'
    apply plugin: 'maven'
 
-   group = 'org.webpieces'
-   if(project.hasProperty('projVersion')) {
-     project.version = '1.9.'+project.projVersion
-     println("CREATING RELEASE VERSION "+project.version)
-   } else {
-     project.version = '1.9-developer'
-     println("CREATING DEVELOPER VERSION "+version)
-   }
+
+
+   
 
    ext {
       //This is an input directory that we read jars from if they are not in a repo somewhere
